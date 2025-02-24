@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<!-- Ajout du style CSS directement dans la page pour éviter que la navbar cache le formulaire -->
+<style>
+    /* Appliquer un padding supérieur pour éviter que le contenu ne soit caché par la barre de navigation */
+    .page-inscription {
+        padding-top: 120px; /* Ajuste cette valeur selon la hauteur de ta navbar */
+    }
+</style>
+
+<div class="container page-inscription">
+    <h2>Inscription</h2>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-primary">S'inscrire</button>
+    </form>
+    <p>Déjà inscrit ? <a href="{% url 'connexion' %}">Connectez-vous</a></p>
+</div>
+{% endblock %}

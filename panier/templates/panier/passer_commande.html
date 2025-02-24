@@ -1,0 +1,113 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <div class="container">
+    <div class="row">
+      <!-- Formulaire de commande -->
+      <div class="col-md-7">
+        <div class="card shadow-lg">
+          <div class="card-body">
+            <h2 class="text-center text-primary">Passer la commande</h2>
+            <form method="POST" novalidate>
+                {% csrf_token %}
+                <div class="mb-3">
+                  <div class="form-group">
+                    {{ form.as_p }}
+                  </div>
+                  {% if form.errors %}
+                    <div class="alert alert-danger mt-3">
+                      <strong>Erreur :</strong> Veuillez vérifier les champs du formulaire.
+                    </div>
+                  {% endif %}
+                </div>
+                <button type="submit" class="btn btn-success w-100">Passer la commande</button>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <!-- Section Checkout / Résumé de la commande -->
+      <div class="col-md-5">
+        <div class="card shadow-lg">
+          <div class="card-body">
+            <h3 class="text-center text-secondary">Résumé de la commande</h3>
+            <ul class="list-group">
+              {% for item in panier %}
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                  {{ item.nom }}
+                  <span class="badge bg-primary rounded-pill">{{ item.prix }}$</span>
+                </li>
+              {% empty %}
+                <li class="list-group-item">Votre panier est vide.</li>
+              {% endfor %}
+            </ul>
+            <hr>
+            <h4 class="text-end">Total: <strong>{{ total }}$</strong></h4>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}
+
+{% block css %}
+  <style>
+    /* Assurer un bon affichage */
+    body {
+      background-color: #f4f4f9;
+    }
+
+    /* Empêcher que la navbar cache le contenu */
+    .container {
+      margin-top: 80px; /* Ajuste selon la hauteur de la navbar */
+    }
+
+    .card {
+      border-radius: 10px;
+      border: none;
+    }
+
+    .card-body {
+      padding: 25px;
+    }
+
+    h2, h3 {
+      font-size: 22px;
+      margin-bottom: 20px;
+    }
+
+    .btn-success {
+      font-size: 18px;
+      padding: 12px;
+    }
+
+    .list-group-item {
+      font-size: 16px;
+    }
+
+    .form-group {
+      margin-bottom: 15px;
+    }
+
+    .alert-danger {
+      font-size: 14px;
+    }
+
+    /* Correction dynamique avec JS si la navbar est fixe */
+    .fixed-top {
+      position: fixed;
+      width: 100%;
+      z-index: 1030;
+    }
+  </style>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      let navbar = document.querySelector(".fixed-top");
+      if (navbar) {
+        let navbarHeight = navbar.offsetHeight;
+        document.querySelector(".container").style.marginTop = navbarHeight + "px";
+      }
+    });
+  </script>
+{% endblock %}

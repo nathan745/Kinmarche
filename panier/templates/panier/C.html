@@ -1,0 +1,80 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <div class="checkout-container">
+    <h1 class="text-center">Détails de la commande</h1>
+
+    {% if user.is_authenticated %}
+      <div class="checkout-details card shadow-lg">
+        <div class="card-body">
+          <p><strong>Numéro de la commande : </strong> {{ commande.id }}</p>
+          <p><strong>Client : </strong> {{ commande.client.username }}</p>
+          
+          <h3 class="mt-4">Produits commandés :</h3>
+          <ul class="list-group">
+            {% for item in commande.commandeproduit_set.all %}
+              <li class="list-group-item d-flex justify-content-between">
+                <span>{{ item.produit.nom }} (x{{ item.quantite }})</span>
+                <strong>{{ item.produit.prix }}€</strong>
+              </li>
+            {% endfor %}
+          </ul>
+
+          <h3 class="mt-4 text-end">Total : <strong class="text-primary">{{ total_commande }}€</strong></h3>
+
+          <!-- Formulaire de paiement -->
+          <h4 class="mt-4">Informations de paiement</h4>
+          <form method="POST" action="{% url 'checkout' %}">
+            {% csrf_token %}
+            <div class="mb-3">
+              <label for="cardNumber" class="form-label">Numéro de carte</label>
+              <input type="text" class="form-control" id="cardNumber" name="cardNumber" required>
+            </div>
+            <div class="mb-3">
+              <label for="expiryDate" class="form-label">Date d'expiration</label>
+              <input type="text" class="form-control" id="expiryDate" name="expiryDate" required>
+            </div>
+            <div class="mb-3">
+              <label for="cvv" class="form-label">CVV</label>
+              <input type="text" class="form-control" id="cvv" name="cvv" required>
+            </div>
+            <button type="submit" class="btn btn-success w-100">Confirmer la commande</button>
+          </form>
+        </div>
+      </div>
+    {% else %}
+      <div class="alert alert-warning text-center">
+        <p>Vous devez être connecté pour procéder au paiement.</p>
+        <a href="{% url 'login' %}" class="btn btn-warning">Se connecter</a>
+      </div>
+    {% endif %}
+  </div>
+{% endblock %}
+
+{% block css %}
+  <style>
+    .checkout-container {
+      max-width: 800px;
+      margin: auto;
+      padding: 20px;
+      margin-top: 80px; /* Si la navbar est fixe */
+    }
+
+    .checkout-details {
+      background: #fff;
+      border-radius: 10px;
+      padding: 20px;
+      margin-top: 20px;
+    }
+
+    .btn {
+      font-size: 18px;
+      padding: 10px 20px;
+      border-radius: 5px;
+    }
+
+    .form-label {
+      font-weight: bold;
+    }
+  </style>
+{% endblock %}

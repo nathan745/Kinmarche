@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<!-- Ajout du style CSS directement dans la page pour éviter que la navbar cache le formulaire -->
+<style>
+    /* Appliquer un padding supérieur pour éviter que le contenu ne soit caché par la barre de navigation */
+    .page-connexion {
+        padding-top: 120px; /* Ajuste cette valeur selon la hauteur de ta navbar */
+    }
+</style>
+
+<div class="container page-connexion">
+    <h2>Connexion</h2>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-primary">Se connecter</button>
+    </form>
+    <p>Pas encore inscrit ? <a href="{% url 'inscription' %}">Créer un compte</a></p>
+</div>
+{% endblock %}

@@ -1,0 +1,139 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<!-- Vesitable Shop Start-->
+<div class="container-fluid vesitable py-5 main-content">
+    <div class="container py-5">
+        <h1 class="mb-4 text-center">Nos Produits</h1>
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
+            {% for produit in produits %}
+            {% if produit.stock > 0 %}
+            <div class="col">
+                <div class="border border-primary rounded position-relative vesitable-item">
+                    <div class="vesitable-img">
+                        <a href="{% url 'product.detail' pk=produit.id %}">
+                            <img src="{{ produit.image.url }}" class="img-fluid w-100 rounded-top" alt="{{ produit.nom }}">
+                        </a>
+                    </div>
+                    <div class="text-white bg-primary px-3 py-1 rounded position-absolute" style="top: 10px; right: 10px;">{{ produit.categorie }}</div>
+                    <div class="p-4 rounded-bottom d-flex flex-column">
+                        <a href="{% url 'product.detail' pk=produit.id %}">
+                            <h4 class="product-name">{{ produit.nom }}</h4>
+                        </a>
+                        <p>{{ produit.description }}</p>
+                        <div class="d-flex justify-content-between flex-lg-wrap mt-auto">
+                            <p class="text-dark fs-5 fw-bold mb-0">${{ produit.prix }} / kg</p>
+                            <a href="{% url 'ajouter_au_panier' produit.id %}" class="btn border border-secondary rounded-pill px-3 text-primary">
+                                <i class="fa fa-shopping-bag me-2 text-primary"></i> Ajouter au panier
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% else %}
+            <div class="col">
+                <div class="border border-secondary rounded position-relative vesitable-item">
+                    <div class="vesitable-img">
+                        <a href="{% url 'product.detail' pk=produit.id %}">
+                            <img src="{{ produit.image.url }}" class="img-fluid w-100 rounded-top" alt="{{ produit.nom }}">
+                        </a>
+                    </div>
+                    <div class="text-white bg-danger px-3 py-1 rounded position-absolute" style="top: 10px; right: 10px;">Rupture de stock</div>
+                    <div class="p-4 rounded-bottom d-flex flex-column">
+                        <a href="{% url 'product.detail' pk=produit.id %}">
+                            <h4 class="product-name">{{ produit.nom }}</h4>
+                        </a>
+                        <p>{{ produit.description }}</p>
+                        <div class="d-flex justify-content-between flex-lg-wrap mt-auto">
+                            <p class="text-dark fs-5 fw-bold mb-0">${{ produit.prix }} / kg</p>
+                            <button class="btn btn-secondary rounded-pill px-3" disabled>
+                                <i class="fa fa-ban me-2"></i> Rupture de stock
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+            {% endfor %}
+        </div>
+    </div>
+</div>
+<!-- Vesitable Shop End -->
+
+<style>
+    /* CSS pour ajuster la taille du contenu et empêcher le footer de chevaucher les produits */
+    
+    /* On s'assure que la page occupe toute la hauteur */
+    html, body {
+        height: 100%;
+        margin: 0;
+    }
+
+    .main-content {
+        min-height: calc(100vh - 120px); /* Calcule la hauteur restante, en tenant compte de la taille du footer */
+    }
+
+    .container-fluid.vesitable {
+        padding-bottom: 60px; /* Ajoute de l'espace sous les produits pour éviter qu'ils ne soient cachés par le footer */
+    }
+
+    /* Styles pour le footer, si besoin */
+    footer {
+        position: relative; 
+        padding: 20px 0; /* Réduit la hauteur du footer */
+        background-color: #f8f9fa;
+        z-index: 10;
+    }
+
+    /* Styles des produits */
+    .vesitable-item {
+        overflow: hidden;
+        position: relative;
+        transition: transform 0.3s ease-in-out;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .vesitable-item:hover {
+        transform: translateY(-10px); /* Effet de survol */
+    }
+
+    /* On ajuste l'image des produits */
+    .vesitable-img img {
+        max-height: 200px;
+        object-fit: cover;
+        width: 100%;
+    }
+
+    /* Styles pour le bouton d'ajout au panier */
+    .btn {
+        transition: background-color 0.3s ease;
+    }
+
+    .btn:hover {
+        background-color: #e0e0e0;
+    }
+
+    /* Ajustement du nom des produits */
+    .product-name {
+        white-space: normal;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        font-size: 1.1rem;
+        line-height: 1.5;
+        margin-bottom: 10px;
+    }
+
+    /* On ajuste l'espace et les éléments à l'intérieur du conteneur du produit */
+    .vesitable-item .p-4 {
+        flex-grow: 1;
+    }
+
+    /* Optionnel : ajuster la taille de la police pour le nom */
+    .product-name {
+        font-size: 1.2rem;
+        line-height: 1.4;
+    }
+</style>
+
+{% endblock %}

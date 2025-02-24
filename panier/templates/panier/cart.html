@@ -1,0 +1,111 @@
+{% extends "base.html" %}
+
+{% block content %}
+<!-- Single Page Header start -->
+<div class="container-fluid page-header py-5">
+    <h1 class="text-center text-white display-6">Panier</h1>
+    <ol class="breadcrumb justify-content-center mb-0">
+        <li class="breadcrumb-item"><a href="{% url 'Home.index' %}">Accueil</a></li>
+        <li class="breadcrumb-item active text-white">Cart</li>
+    </ol>
+</div>
+<!-- Single Page Header End -->
+
+<!-- Cart Page Start -->
+<div class="container-fluid py-5">
+    <div class="container py-5">
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col">Produits</th>
+                        <th scope="col">Nom</th>
+                        <th scope="col">PRIX</th>
+                        <th scope="col">Quantite</th>
+                        <th scope="col">Total</th>
+                        <th scope="col">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in items %}
+                    <tr>
+                        <th scope="row">
+                            <div class="d-flex align-items-center">
+                                <img src="{{ item.produit.image.url }}" class="img-fluid me-3 rounded-circle" style="width: 70px; height: 70px;" alt="{{ item.produit.nom }}">
+                            </div>
+                        </th>
+                        <td class="align-middle">{{ item.produit.nom }}</td>
+                        <td class="align-middle">${{ item.produit.prix }}</td>
+                        <td class="align-middle">
+                            <div class="input-group quantity" style="width: 110px;">
+                                <div class="input-group-btn">
+                                    <a href="{% url 'diminuer_quantite' item.produit.id %}" class="btn btn-sm btn-outline-secondary rounded-circle">
+                                        <i class="fa fa-minus"></i>
+                                    </a>
+                                </div>
+                                <input type="text" class="form-control form-control-sm text-center border-0" value="{{ item.quantite }}" readonly>
+                                <div class="input-group-btn">
+                                    <a href="{% url 'ajouter_au_panier' item.produit.id %}" class="btn btn-sm btn-outline-secondary rounded-circle">
+                                        <i class="fa fa-plus"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="align-middle">${{ item.total }}</td>
+                        <td class="align-middle">
+                            <a href="{% url 'supprimer_du_panier' item.id %}" class="btn btn-sm btn-outline-danger rounded-circle">
+                                <i class="fa fa-times"></i>
+                            </a>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="6" class="text-center text-muted">Votre panier est vide.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Coupon Section -->
+        
+        </div>
+
+        <!-- Cart Total -->
+        <div class="row g-4 justify-content-end mt-4">
+            <div class="col-sm-8 col-md-7 col-lg-6 col-xl-4">
+                <div class="bg-light rounded p-4 shadow-sm">
+                    <h3 class="mb-4">Résumé de la commande</h3>
+                    
+                    <div class="d-flex justify-content-between">
+                        <h5>Sous-total:</h5>
+                        <p>${{ total_panier|default:0 }}</p>
+                    </div>
+
+                    <div class="d-flex justify-content-between">
+                        <h5>Livraison:</h5>
+                        <p>$3.00</p>
+                    </div>
+
+                    <hr>
+
+                    <div class="d-flex justify-content-between">
+                        <h4>Total:</h4>
+                        <h4>${{ total_panier|add:3|default:3 }}</h4>
+                    </div>
+
+                    <!-- Boutons d'action -->
+                    <div class="mt-4 text-center">
+                        <a href="{% url 'passer_commande' %}" class="btn btn-success w-100 rounded-pill py-2">
+                            Passer Commande
+                        </a>
+    
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Cart Page End -->
+
+{% endblock %}
